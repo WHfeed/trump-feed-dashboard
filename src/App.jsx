@@ -58,13 +58,13 @@ function PostCard({ post }) {
       <div className="text-sm font-medium">
         🧠 Overall Sentiment:{" "}
         <span
-          className={`$ {
+          className={
             sentiment === "Bullish"
               ? "text-green-500"
               : sentiment === "Bearish"
               ? "text-red-500"
               : "text-gray-500 dark:text-gray-300"
-          }`}
+          }
         >
           {sentiment}
         </span>
@@ -96,19 +96,9 @@ function App() {
   });
 
   const fetchFeed = () => {
-    fetch("http://localhost:5000/run-feed", {
-      method: "POST",
-    })
+    fetch(`/summarized_feed.json?${Date.now()}`)
       .then((res) => res.json())
-      .then((res) => {
-        console.log("Backend response:", res);
-        return fetch(`/summarized_feed.json?${Date.now()}`);
-      })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log("📦 Loaded feed:", json);
-        setData(json);
-      })
+      .then((json) => setData(json))
       .catch((err) => console.error("Error loading feed:", err));
   };
 
@@ -129,6 +119,7 @@ function App() {
         const extra = [];
         if (post.impact?.stock_market > 0) extra.push("Stock Market");
         if (post.impact?.bond_market > 0) extra.push("Bond Market");
+        if (post.impact?.currency > 0) extra.push("Currencies");
         return [...tags, ...extra];
       })
     )
@@ -142,7 +133,13 @@ function App() {
     })
     .filter((post) => {
       if (selectedTags.length === 0) return true;
-      return selectedTags.some((tag) => post.tags?.includes(tag));
+      const tags = new Set([
+        ...(post.tags || []),
+        ...(post.impact?.stock_market > 0 ? ["Stock Market"] : []),
+        ...(post.impact?.bond_market > 0 ? ["Bond Market"] : []),
+        ...(post.impact?.currency > 0 ? ["Currencies"] : [])
+      ]);
+      return selectedTags.every((tag) => tags.has(tag));
     })
     .filter((post) => {
       const searchTerm = search.toLowerCase();
@@ -208,10 +205,10 @@ function App() {
               isMulti
               name="tags"
               options={allTags.map((tag) => ({ value: tag, label: tag }))}
-              className="basic-multi-select text-black"
+              className="basic-multi-select text-black dark:text-white"
               classNamePrefix="select"
-              onChange={(selected) => setSelectedTags(selected.map((s) => s.value))}
               placeholder="Filter by tags..."
+              onChange={(selected) => setSelectedTags(selected.map((t) => t.value))}
             />
           </div>
         )}
