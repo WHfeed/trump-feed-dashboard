@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
+import Select from "react-select";
 import "./index.css";
 
 function ImpactBar({ label, score, sentiment }) {
-  const levels = ["bg-gray-300", "bg-red-500", "bg-orange-400", "bg-yellow-300", "bg-green-400", "bg-green-600"];
+  const levels = [
+    "bg-gray-300",
+    "bg-red-500",
+    "bg-orange-400",
+    "bg-yellow-300",
+    "bg-green-400",
+    "bg-green-600"
+  ];
   const barColor = levels[score] || "bg-gray-300";
   return (
     <div className="mb-1">
@@ -50,7 +58,7 @@ function PostCard({ post }) {
       <div className="text-sm font-medium">
         🧠 Overall Sentiment:{" "}
         <span
-          className={`${
+          className={`$ {
             sentiment === "Bullish"
               ? "text-green-500"
               : sentiment === "Bearish"
@@ -77,34 +85,32 @@ function PostCard({ post }) {
 function App() {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("All");
-  const [tagFilter, setTagFilter] = useState("All");
+  const [selectedTags, setSelectedTags] = useState([]);
   const [search, setSearch] = useState("");
   const [darkMode, setDarkMode] = useState(false);
-  const today = new Date().toISOString().slice(0, 10); // e.g. "2025-04-18"
+  const today = new Date().toISOString().slice(0, 10);
 
-const postsToday = data.filter((post) => {
-  const publishedDate = new Date(post.published).toISOString().slice(0, 10);
-  return publishedDate === today;
-});
+  const postsToday = data.filter((post) => {
+    const publishedDate = new Date(post.published).toISOString().slice(0, 10);
+    return publishedDate === today;
+  });
 
-const fetchFeed = () => {
-  fetch("http://localhost:5000/run-feed", {
-    method: "POST",
-  })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log("Backend response:", res);
-      return fetch(`/summarized_feed.json?${Date.now()}`);
+  const fetchFeed = () => {
+    fetch("http://localhost:5000/run-feed", {
+      method: "POST",
     })
-    .then((res) => res.json())
-.then((json) => {
-  console.log("📦 Loaded feed:", json);
-  setData(json);
-})
-
-    .catch((err) => console.error("Error loading feed:", err));
-};
-
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("Backend response:", res);
+        return fetch(`/summarized_feed.json?${Date.now()}`);
+      })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("📦 Loaded feed:", json);
+        setData(json);
+      })
+      .catch((err) => console.error("Error loading feed:", err));
+  };
 
   useEffect(() => {
     fetchFeed();
@@ -135,8 +141,8 @@ const fetchFeed = () => {
       return post.sentiment === filter;
     })
     .filter((post) => {
-      if (tagFilter === "All") return true;
-      return post.tags?.includes(tagFilter) || allTags.includes(tagFilter);
+      if (selectedTags.length === 0) return true;
+      return selectedTags.some((tag) => post.tags?.includes(tag));
     })
     .filter((post) => {
       const searchTerm = search.toLowerCase();
@@ -154,8 +160,8 @@ const fetchFeed = () => {
         <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
           <h1 className="text-3xl font-bold">🇺🇸 Trump GPT Intelligence Feed</h1>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-  🗓️ Posts on {today}: <strong>{postsToday.length}</strong>
-</p>
+            🗓️ Posts on {today}: <strong>{postsToday.length}</strong>
+          </p>
           <div className="flex gap-2">
             <button
               onClick={fetchFeed}
@@ -197,30 +203,16 @@ const fetchFeed = () => {
         </div>
 
         {allTags.length > 0 && (
-          <div className="flex gap-2 flex-wrap text-sm mb-6">
-            <button
-              onClick={() => setTagFilter("All")}
-              className={`px-3 py-1 rounded-full border ${
-                tagFilter === "All"
-                  ? "bg-purple-600 text-white"
-                  : "bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-200"
-              }`}
-            >
-              All Tags
-            </button>
-            {allTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setTagFilter(tag)}
-                className={`px-3 py-1 rounded-full border ${
-                  tagFilter === tag
-                    ? "bg-purple-600 text-white"
-                    : "bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-200"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
+          <div className="mb-6">
+            <Select
+              isMulti
+              name="tags"
+              options={allTags.map((tag) => ({ value: tag, label: tag }))}
+              className="basic-multi-select text-black"
+              classNamePrefix="select"
+              onChange={(selected) => setSelectedTags(selected.map((s) => s.value))}
+              placeholder="Filter by tags..."
+            />
           </div>
         )}
 
