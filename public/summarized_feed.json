@@ -204,5 +204,119 @@
             "law_enforcement": 3
         },
         "timestamp": "2025-04-19T09:13:33.038013"
+    },
+    {
+        "title": "Readout of President Donald J. Trump’s Call with Prime Minister Starmer of the United Kingdom",
+        "link": "https://www.whitehouse.gov/briefings-statements/2025/04/readout-of-president-donald-j-trumps-call-with-prime-minister-starmer-of-the-united-kingdom-9426/",
+        "published": "Fri, 18 Apr 2025 20:50:25 +0000",
+        "summary": "President Trump had a call with Prime Minister Starmer of the United Kingdom.",
+        "tags": [
+            "Foreign Policy",
+            "Global Relations"
+        ],
+        "sentiment": "Neutral",
+        "impact": {
+            "stock_market": 0,
+            "stock_sentiment": "Neutral",
+            "bond_market": 0,
+            "bond_sentiment": "Neutral",
+            "currency": 0,
+            "immigration_policy": 0,
+            "global_relations": 3,
+            "law_enforcement": 0
+        },
+        "timestamp": "2025-04-19T12:02:09.869781"
+    },
+    {
+        "title": "Fact Sheet: President Donald J. Trump Creates New Federal Employee Category to Enhance Accountability",
+        "link": "https://www.whitehouse.gov/fact-sheets/2025/04/fact-sheet-president-donald-j-trump-creates-new-federal-employee-category-to-enhance-accountability/",
+        "published": "Fri, 18 Apr 2025 20:41:34 +0000",
+        "summary": "President Trump has created a new federal employee category to enhance accountability.",
+        "tags": [
+            "Government",
+            "Accountability",
+            "Policy"
+        ],
+        "sentiment": "Neutral",
+        "impact": {
+            "stock_market": 1,
+            "stock_sentiment": "Neutral",
+            "bond_market": 1,
+            "bond_sentiment": "Neutral",
+            "currency": 0,
+            "immigration_policy": 0,
+            "global_relations": 0,
+            "law_enforcement": 0
+        },
+        "timestamp": "2025-04-19T12:02:11.058726"
+    },
+    {
+        "title": "Presidential Message on the 250th Anniversary of Paul Revere’s Midnight Ride, 2025",
+        "link": "https://www.whitehouse.gov/briefings-statements/2025/04/presidential-message-on-the-250th-anniversary-of-paul-reveres-midnight-ride-2025/",
+        "published": "Fri, 18 Apr 2025 19:05:20 +0000",
+        "summary": "President Trump commemorates the 250th Anniversary of Paul Revere's Midnight Ride in 2025.",
+        "tags": [
+            "Historical Event",
+            "American History",
+            "Commemoration"
+        ],
+        "sentiment": "Neutral",
+        "impact": {
+            "stock_market": 0,
+            "stock_sentiment": "Neutral",
+            "bond_market": 0,
+            "bond_sentiment": "Neutral",
+            "currency": 0,
+            "immigration_policy": 0,
+            "global_relations": 0,
+            "law_enforcement": 0
+        },
+        "timestamp": "2025-04-19T12:02:12.284995"
+    },
+    {
+        "title": "First Lady Melania Trump Previews 2025 White House Easter Egg Roll Activities",
+        "link": "https://www.whitehouse.gov/briefings-statements/2025/04/first-lady-melania-trump-previews-2025-white-house-easter-egg-roll-activities/",
+        "published": "Fri, 18 Apr 2025 19:01:27 +0000",
+        "summary": "First Lady Melania Trump previews activities for the 2025 White House Easter Egg Roll.",
+        "tags": [
+            "White House",
+            "Events",
+            "First Lady"
+        ],
+        "sentiment": "Neutral",
+        "impact": {
+            "stock_market": 0,
+            "stock_sentiment": "Neutral",
+            "bond_market": 0,
+            "bond_sentiment": "Neutral",
+            "currency": 0,
+            "immigration_policy": 0,
+            "global_relations": 0,
+            "law_enforcement": 0
+        },
+        "timestamp": "2025-04-19T12:02:13.926140"
+    },
+    {
+        "title": "Trump Administration Advances First Wave of Critical Mineral Production Projects",
+        "link": "https://www.whitehouse.gov/articles/2025/04/trump-administration-advances-first-wave-of-critical-mineral-production-projects/",
+        "published": "Fri, 18 Apr 2025 13:43:24 +0000",
+        "summary": "The Trump administration is advancing the first wave of critical mineral production projects.",
+        "tags": [
+            "Energy",
+            "Mining",
+            "Economy"
+        ],
+        "sentiment": "Bullish",
+        "impact": {
+            "stock_market": 3,
+            "stock_sentiment": "Bullish",
+            "bond_market": 2,
+            "bond_sentiment": "Neutral",
+            "currency": 0,
+            "immigration_policy": 0,
+            "global_relations": 3,
+            "law_enforcement": 0
+        },
+        "timestamp": "2025-04-19T12:02:15.257205"
     }
 ]
