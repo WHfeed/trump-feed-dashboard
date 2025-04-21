@@ -97,11 +97,11 @@ function App() {
 
   const fetchFeed = () => {
     fetch("https://whfeed-backend.onrender.com/run-feed", { method: "POST" })
-      .then(() => fetch(`/summarized_feed.json?${Date.now()}`))
+      .then(() => fetch("https://whfeed-backend.onrender.com/feed"))
       .then((res) => res.json())
       .then((json) => setData(json))
       .catch((err) => console.error("Error loading feed:", err));
-  };
+  };  
 
   useEffect(() => {
     fetchFeed();
