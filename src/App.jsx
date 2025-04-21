@@ -96,7 +96,8 @@ function App() {
   });
 
   const fetchFeed = () => {
-    fetch(`/summarized_feed.json?${Date.now()}`)
+    fetch("https://whfeed-backend.onrender.com/run-feed", { method: "POST" })
+      .then(() => fetch(`/summarized_feed.json?${Date.now()}`))
       .then((res) => res.json())
       .then((json) => setData(json))
       .catch((err) => console.error("Error loading feed:", err));
