@@ -6,16 +6,16 @@ export default function PostCard({
   summary,
   tags = [],
   sentiment,
-  impact = {},
+  impact = 0,
   source,
   published,
 }) {
   const profilePicUrl = `https://unavatar.io/${source.split(" - ").pop()?.toLowerCase() || "whitehouse.gov"}`;
-  const impactSum = (impact.stock_market || 0) + (impact.bond_market || 0) + (impact.currency || 0);
-  const hasMarketImpact = impactSum > 0;
+  const impactValue = impact || 0;
+  const hasImpact = impactValue > 0;
 
   const impactWidth =
-    impactSum >= 5 ? "w-full" : impactSum >= 3 ? "w-2/4" : impactSum >= 1 ? "w-1/4" : "w-0";
+    impactValue >= 5 ? "w-full" : impactValue >= 3 ? "w-2/4" : impactValue >= 1 ? "w-1/4" : "w-0";
 
   const date = new Date(published);
   const formattedTime = date.toLocaleTimeString('en-US', {
@@ -57,8 +57,8 @@ export default function PostCard({
           ))}
         </div>
 
-        {/* Impact Bar (if market impact) */}
-        {hasMarketImpact && (
+        {/* Impact Bar */}
+        {hasImpact && (
           <div className="flex flex-col space-y-2 mt-2">
             <div className="flex items-center text-[#1B1F19] text-xs font-bold uppercase tracking-wide">
               <div className="flex-grow h-px bg-gradient-to-r from-transparent via-[#1B1F19] to-transparent"></div>
