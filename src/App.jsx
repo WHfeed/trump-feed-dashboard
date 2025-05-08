@@ -1,227 +1,168 @@
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import "./index.css";
+import PostCard from "./components/PostCard";
+import StatsBox from "./components/StatsBox";
+import RecapBox from "./components/RecapBox";
+import FilterBar from "./components/FilterBar";
+import Header from "./components/Header";
 
-function ImpactBar({ label, score, sentiment }) {
-  const levels = [
-    "bg-gray-300",
-    "bg-red-500",
-    "bg-orange-400",
-    "bg-yellow-300",
-    "bg-green-400",
-    "bg-green-600"
-  ];
-  const barColor = levels[score] || "bg-gray-300";
-  return (
-    <div className="mb-1">
-      <div className="flex justify-between text-sm font-medium">
-        <span>{label}</span>
-        <span className="italic text-xs text-gray-400 dark:text-gray-300">{sentiment || ""}</span>
-      </div>
-      <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded">
-        <div className={`h-2 ${barColor} rounded`} style={{ width: `${score * 20}%` }}></div>
-      </div>
-    </div>
-  );
-}
-
-function PostCard({ post }) {
-  const { summary, tags, sentiment, impact, link, published } = post;
-  return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md space-y-3 border border-gray-200 dark:border-gray-600">
-      <div className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-300">
-        <span>{new Date(published).toLocaleString()}</span>
-        {impact?.stock_market >= 4 && (
-          <span className="text-red-600 dark:text-red-400 font-bold text-xs ml-2">🚨 Stock Market Impact</span>
-        )}
-        {impact?.bond_market >= 4 && (
-          <span className="text-purple-600 dark:text-purple-400 font-bold text-xs ml-2">🚨 Bond Market Impact</span>
-        )}
-      </div>
-
-      <div className="text-gray-700 dark:text-gray-100 text-sm">{summary}</div>
-
-      <div className="text-xs text-blue-600 dark:text-blue-400">
-        <a href={link} target="_blank" rel="noopener noreferrer" className="hover:underline">
-          🔗 View Original Post
-        </a>
-      </div>
-
-      <div className="flex flex-wrap gap-2 text-xs text-white">
-        {tags?.map((tag) => (
-          <span key={tag} className="bg-blue-600 px-2 py-0.5 rounded-full">
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <div className="text-sm font-medium">
-        🧠 Overall Sentiment:{" "}
-        <span
-          className={
-            sentiment === "Bullish"
-              ? "text-green-500"
-              : sentiment === "Bearish"
-              ? "text-red-500"
-              : "text-gray-500 dark:text-gray-300"
-          }
-        >
-          {sentiment}
-        </span>
-      </div>
-
-      <div className="space-y-1 text-sm">
-        <ImpactBar label="Stock Market" score={impact?.stock_market ?? 0} sentiment={impact?.stock_sentiment} />
-        <ImpactBar label="Bond Market" score={impact?.bond_market ?? 0} sentiment={impact?.bond_sentiment} />
-        <ImpactBar label="Currency" score={impact?.currency ?? 0} />
-        <ImpactBar label="Immigration Policy" score={impact?.immigration_policy ?? 0} />
-        <ImpactBar label="Global Relations" score={impact?.global_relations ?? 0} />
-        <ImpactBar label="Law Enforcement" score={impact?.law_enforcement ?? 0} />
-      </div>
-    </div>
-  );
-}
-
-function App() {
-  const [data, setData] = useState([]);
-  const [filter, setFilter] = useState("All");
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [search, setSearch] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
-  const today = new Date().toISOString().slice(0, 10);
-
-  const postsToday = data.filter((post) => {
-    const publishedDate = new Date(post.published).toISOString().slice(0, 10);
-    return publishedDate === today;
-  });
-
-  const fetchFeed = () => {
-    fetch("https://whfeed-backend.onrender.com/run-feed", { method: "POST" })
-      .then(() => fetch("https://whfeed-backend.onrender.com/feed"))
-      .then((res) => res.json())
-      .then((json) => setData(json))
-      .catch((err) => console.error("Error loading feed:", err));
-  };  
+export default function App() {
+  const [posts, setPosts] = useState([]);
+  const [selectedSources, setSelectedSources] = useState([]);
+  const [selectedIndividuals, setSelectedIndividuals] = useState([]);
+  const [keywordFilter, setKeywordFilter] = useState("");
+  const [impactFilter, setImpactFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
-    fetchFeed();
-    const interval = setInterval(fetchFeed, 60000);
-    return () => clearInterval(interval);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const allSources = Array.from(new Set(posts.map((p) => p.source)));
+  const allIndividuals = Array.from(
+    new Set(posts.map((p) => (p.source.includes("X - ") ? p.source : null)).filter(Boolean))
+  );
+
+  const toggleSelection = (value, list, setList) => {
+    setList(list.includes(value) ? list.filter((i) => i !== value) : [...list, value]);
+  };
+
+  const toggleDropdown = (key) => {
+    setActiveDropdown((prev) => (prev === key ? null : key));
+  };
+
+  const filteredPosts = posts.filter((post) => {
+    const matchesSource = selectedSources.length === 0 || selectedSources.includes(post.source);
+    const matchesIndividual =
+      !post.source.startsWith("X - ") ||
+      selectedIndividuals.length === 0 ||
+      selectedIndividuals.includes(post.source);
+    const matchesKeyword =
+      keywordFilter === "" ||
+      post.title.toLowerCase().includes(keywordFilter.toLowerCase()) ||
+      post.summary.toLowerCase().includes(keywordFilter.toLowerCase());
+
+    const impact = post.impact || {};
+    const impactSum = [impact.stock_market, impact.bond_market, impact.currency].reduce(
+      (acc, val) => acc + (val || 0),
+      0
+    );
+    const matchesImpact =
+      impactFilter === "all" ||
+      (impactFilter === "medium" && impactSum >= 3) ||
+      (impactFilter === "high" && impactSum >= 5);
+
+    return matchesSource && matchesIndividual && matchesKeyword && matchesImpact;
+  });
+
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-  }, [darkMode]);
-
-  const allTags = Array.from(
-    new Set(
-      data.flatMap((post) => {
-        const tags = post.tags || [];
-        const extra = [];
-        if (post.impact?.stock_market > 0) extra.push("Stock Market");
-        if (post.impact?.bond_market > 0) extra.push("Bond Market");
-        if (post.impact?.currency > 0) extra.push("Currencies");
-        return [...tags, ...extra];
+    fetch("/summarized_feed.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data.reverse());
+        setLoading(false);
       })
-    )
-  ).sort();
+      .catch(() => setLoading(false));
+  }, []);
 
-  const filtered = data
-    .filter((post) => post.summary && post.summary !== "No specific information provided in the post.")
-    .filter((post) => {
-      if (filter === "All") return true;
-      return post.sentiment === filter;
-    })
-    .filter((post) => {
-      if (selectedTags.length === 0) return true;
-      const tags = new Set([
-        ...(post.tags || []),
-        ...(post.impact?.stock_market > 0 ? ["Stock Market"] : []),
-        ...(post.impact?.bond_market > 0 ? ["Bond Market"] : []),
-        ...(post.impact?.currency > 0 ? ["Currencies"] : [])
-      ]);
-      return selectedTags.every((tag) => tags.has(tag));
-    })
-    .filter((post) => {
-      const searchTerm = search.toLowerCase();
+  const stats = {
+    totalPosts: posts.length,
+    overallImpact:
+      posts.reduce((acc, post) => {
+        const imp = post.impact || {};
+        return acc + (imp.stock_market || 0) + (imp.bond_market || 0) + (imp.currency || 0);
+      }, 0) >= posts.length * 3
+        ? "Medium"
+        : "Low",
+    sources: {
+      "White House": posts.filter((p) => p.source.includes("whitehouse")).length,
+      "Truth Social": posts.filter((p) => p.source.includes("Truth Social")).length,
+      "X.com": posts.filter((p) => p.source.includes("X -")).length,
+    },
+  };
+
+  const renderRecapBox = (index) => {
+    if (windowWidth > 1410) return null;
+    if (filteredPosts.length >= 5 && index === 4) {
       return (
-        post.summary.toLowerCase().includes(searchTerm) ||
-        post.sentiment?.toLowerCase().includes(searchTerm) ||
-        post.tags?.some((tag) => tag.toLowerCase().includes(searchTerm))
+        <RecapBox
+          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events. The market showed moderate reaction with mixed sentiment across equities and currencies. Stay tuned for further updates as the day progresses.`}
+          lastUpdated="2:15 PM"
+        />
       );
-    })
-    .reverse();
+    }
+    if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
+      return (
+        <RecapBox
+          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events. The market showed moderate reaction with mixed sentiment across equities and currencies. Stay tuned for further updates as the day progresses.`}
+          lastUpdated="2:15 PM"
+        />
+      );
+    }
+    return null;
+  };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-10 px-4 text-gray-900 dark:text-gray-100">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
-          <h1 className="text-3xl font-bold">🇺🇸 Trump GPT Intelligence Feed</h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            🗓️ Posts on {today}: <strong>{postsToday.length}</strong>
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={fetchFeed}
-              className="border border-blue-500 text-blue-600 dark:border-blue-300 dark:text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-blue-50 dark:hover:bg-blue-900"
-            >
-              🔁 Get Latest Feed
-            </button>
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="border border-gray-300 dark:border-gray-600 px-3 py-1 rounded-full text-sm"
-            >
-              {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
-            </button>
-          </div>
-        </div>
+    <main className="min-h-screen text-[#E3DCCF] p-6 space-y-10">
+      
+      <Header totalPosts={stats.totalPosts} overallImpact={stats.overallImpact} sources={stats.sources} />
 
-        <input
-          type="text"
-          placeholder="Search summary, tags, sentiment..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 px-3 py-2 rounded-lg text-sm mb-4"
-        />
+      <FilterBar
+        allSources={allSources}
+        allIndividuals={allIndividuals}
+        selectedSources={selectedSources}
+        selectedIndividuals={selectedIndividuals}
+        keywordFilter={keywordFilter}
+        impactFilter={impactFilter}
+        activeDropdown={activeDropdown}
+        toggleDropdown={toggleDropdown}
+        toggleSelection={toggleSelection}
+        setSelectedSources={setSelectedSources}
+        setSelectedIndividuals={setSelectedIndividuals}
+        setKeywordFilter={setKeywordFilter}
+        setImpactFilter={setImpactFilter}
+      />
 
-        <div className="flex gap-2 flex-wrap text-sm mb-3">
-          {["All", "Bullish", "Bearish", "Neutral"].map((label) => (
-            <button
-              key={label}
-              onClick={() => setFilter(label)}
-              className={`px-3 py-1 rounded-full border ${
-                filter === label
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-200"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {allTags.length > 0 && (
-          <div className="mb-6">
-            <Select
-              isMulti
-              name="tags"
-              options={allTags.map((tag) => ({ value: tag, label: tag }))}
-              className="basic-multi-select text-black dark:text-white"
-              classNamePrefix="select"
-              placeholder="Filter by tags..."
-              onChange={(selected) => setSelectedTags(selected.map((t) => t.value))}
-            />
-          </div>
-        )}
-
-        {filtered.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400">No matching posts.</p>
-        ) : (
-          filtered.map((post, i) => <PostCard key={i} post={post} />)
-        )}
+      <div className="flex items-center my-8">
+        <div className="flex-grow h-px bg-gradient-to-r from-transparent via-[#6a805b] to-transparent"></div>
       </div>
-    </div>
+
+      {loading ? (
+        <p className="text-center text-gray-400">
+          🦅 Scouting the latest... powered by <span className="text-white font-semibold">EagleEye</span>
+        </p>
+      ) : (
+        <div className={`mx-auto px-6 ${windowWidth > 1410 ? "flex items-start justify-center" : ""}`}>
+          <div className={`${windowWidth > 1410 ? "w-[700px] space-y-8 -translate-x-20" : "space-y-8 max-w-3xl mx-auto"}`}>
+            {filteredPosts.length === 0 ? (
+              <p className="text-center text-gray-400">No posts match your filters. Try adjusting them.</p>
+            ) : (
+              filteredPosts.map((post, index) => (
+                <React.Fragment key={index}>
+                  <PostCard {...post} />
+                  {renderRecapBox(index)}
+                </React.Fragment>
+              ))
+            )}
+          </div>
+
+          {windowWidth > 1410 && (
+            <div className="w-[540px] relative translate-x-36">
+              <RecapBox
+                summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events. The market showed moderate reaction with mixed sentiment across equities and currencies. Stay tuned for further updates as the day progresses.`}
+                lastUpdated="2:15 PM"
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      <footer className="mt-16 text-center text-xs text-[#6FCF97]">
+        🦅 Powered by <span className="font-semibold animate-breathe">EagleEye AI</span>
+      </footer>
+    </main>
   );
 }
-
-export default App;

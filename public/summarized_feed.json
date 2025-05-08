@@ -1,1 +1,43 @@
-[]
+[
+    {
+      "title": "Trump Announces Major Tax Reform Plan",
+      "link": "https://trumpstruth.org/statuses/99999",
+      "published": "2025-04-23T10:00:00Z",
+      "summary": "President Trump unveiled a sweeping new tax reform package aimed at middle-income earners.",
+      "tags": ["Economy", "Tax Policy"],
+      "sentiment": "Positive",
+      "impact": {
+        "stock_market": 4,
+        "stock_sentiment": "Bullish",
+        "bond_market": 2,
+        "bond_sentiment": "Neutral",
+        "currency": 1,
+        "immigration_policy": 0,
+        "global_relations": 1,
+        "law_enforcement": 0
+      },
+      "source": "Truth Social",
+      "timestamp": "2025-04-23T10:05:00Z"
+    },
+    {
+      "title": "Biden Criticized Over Border Policy",
+      "link": "https://www.whitehouse.gov/articles/2025/04/border-policy-response",
+      "published": "2025-04-23T09:30:00Z",
+      "summary": "The White House is under fire over immigration enforcement and a surge in border crossings.",
+      "tags": ["Immigration", "Border", "Law Enforcement"],
+      "sentiment": "Negative",
+      "impact": {
+        "stock_market": 1,
+        "stock_sentiment": "Neutral",
+        "bond_market": 0,
+        "bond_sentiment": "Neutral",
+        "currency": 0,
+        "immigration_policy": 4,
+        "global_relations": 0,
+        "law_enforcement": 3
+      },
+      "source": "White House",
+      "timestamp": "2025-04-23T09:35:00Z"
+    }
+  ]
+  
