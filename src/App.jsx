@@ -59,15 +59,16 @@ export default function App() {
   });
 
   useEffect(() => {
-    fetch("https://whfeed-backend.onrender.com/feed")
-      .then((res) => res.json())
-      .then((data) => {
-        setPosts(data.reverse());
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    const fetchFeed = () => {
+      fetch("https://whfeed-backend.onrender.com/feed")
+        .then((res) => res.json())
+        .then((data) => {
+          setPosts(data.reverse());
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
     };
-
+  
     // Initial fetch
     fetchFeed();
   
@@ -79,6 +80,7 @@ export default function App() {
     // Cleanup on unmount
     return () => clearInterval(interval);
   }, []);
+  
 
   const stats = {
     totalPosts: posts.length,
