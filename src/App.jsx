@@ -59,7 +59,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    fetch("/summarized_feed.json")
+    fetch("https://whfeed-backend.onrender.com/feed")
       .then((res) => res.json())
       .then((data) => {
         setPosts(data.reverse());
