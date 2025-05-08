@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PostCard from "./components/PostCard";
-import StatsBox from "./components/StatsBox";
+import StatsBox from "./components/Statsbox";
 import RecapBox from "./components/RecapBox";
 import FilterBar from "./components/FilterBar";
 import Header from "./components/Header";
