@@ -66,6 +66,18 @@ export default function App() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+    };
+
+    // Initial fetch
+    fetchFeed();
+  
+    // Auto refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchFeed();
+    }, 30000);
+  
+    // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
   const stats = {
