@@ -1,5 +1,5 @@
 import React from "react";
-import StatsBox from "./Statsbox";
+import StatsBox from "./StatsBox";
 
 export default function Header({ totalPosts, overallImpact, sources }) {
   return (
