@@ -42,18 +42,14 @@ export default function App() {
       selectedIndividuals.includes(post.source);
     const matchesKeyword =
       keywordFilter === "" ||
-      post.title.toLowerCase().includes(keywordFilter.toLowerCase()) ||
-      post.summary.toLowerCase().includes(keywordFilter.toLowerCase());
+      (post.title && post.title.toLowerCase().includes(keywordFilter.toLowerCase())) ||
+      (post.summary && post.summary.toLowerCase().includes(keywordFilter.toLowerCase()));
 
-    const impact = post.impact || {};
-    const impactSum = [impact.stock_market, impact.bond_market, impact.currency].reduce(
-      (acc, val) => acc + (val || 0),
-      0
-    );
+    const impactValue = post.impact || 0;
     const matchesImpact =
       impactFilter === "all" ||
-      (impactFilter === "medium" && impactSum >= 3) ||
-      (impactFilter === "high" && impactSum >= 5);
+      (impactFilter === "medium" && impactValue >= 3) ||
+      (impactFilter === "high" && impactValue >= 5);
 
     return matchesSource && matchesIndividual && matchesKeyword && matchesImpact;
   });
@@ -68,27 +64,20 @@ export default function App() {
         })
         .catch(() => setLoading(false));
     };
-  
-    // Initial fetch
+
     fetchFeed();
-  
-    // Auto refresh every 30 seconds
+
     const interval = setInterval(() => {
       fetchFeed();
     }, 30000);
-  
-    // Cleanup on unmount
+
     return () => clearInterval(interval);
   }, []);
-  
 
   const stats = {
     totalPosts: posts.length,
     overallImpact:
-      posts.reduce((acc, post) => {
-        const imp = post.impact || {};
-        return acc + (imp.stock_market || 0) + (imp.bond_market || 0) + (imp.currency || 0);
-      }, 0) >= posts.length * 3
+      posts.reduce((acc, post) => acc + (post.impact || 0), 0) >= posts.length * 3
         ? "Medium"
         : "Low",
     sources: {
@@ -103,7 +92,7 @@ export default function App() {
     if (filteredPosts.length >= 5 && index === 4) {
       return (
         <RecapBox
-          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events. The market showed moderate reaction with mixed sentiment across equities and currencies. Stay tuned for further updates as the day progresses.`}
+          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events.`}
           lastUpdated="2:15 PM"
         />
       );
@@ -111,7 +100,7 @@ export default function App() {
     if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
       return (
         <RecapBox
-          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events. The market showed moderate reaction with mixed sentiment across equities and currencies. Stay tuned for further updates as the day progresses.`}
+          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events.`}
           lastUpdated="2:15 PM"
         />
       );
@@ -121,7 +110,6 @@ export default function App() {
 
   return (
     <main className="min-h-screen text-[#E3DCCF] p-6 space-y-10">
-      
       <Header totalPosts={stats.totalPosts} overallImpact={stats.overallImpact} sources={stats.sources} />
 
       <FilterBar
@@ -166,7 +154,7 @@ export default function App() {
           {windowWidth > 1410 && (
             <div className="w-[540px] relative translate-x-36">
               <RecapBox
-                summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events. The market showed moderate reaction with mixed sentiment across equities and currencies. Stay tuned for further updates as the day progresses.`}
+                summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events.`}
                 lastUpdated="2:15 PM"
               />
             </div>
