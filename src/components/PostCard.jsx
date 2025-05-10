@@ -1,4 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+
+function getRelativeTime(isoTime) {
+  const postDate = new Date(isoTime);
+  const now = new Date();
+  const diff = Math.floor((now - postDate) / 1000); // in seconds
+
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return postDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" });
+}
 
 export default function PostCard({
   title,
@@ -8,8 +19,10 @@ export default function PostCard({
   sentiment,
   impact = 0,
   source,
-  published,
+  display_time,
 }) {
+  const [showExact, setShowExact] = useState(false);
+
   const profilePicUrl = `https://unavatar.io/${source.split(" - ").pop()?.toLowerCase() || "whitehouse.gov"}`;
   const impactValue = impact || 0;
   const hasImpact = impactValue > 0;
@@ -17,10 +30,11 @@ export default function PostCard({
   const impactWidth =
     impactValue >= 5 ? "w-full" : impactValue >= 3 ? "w-2/4" : impactValue >= 1 ? "w-1/4" : "w-0";
 
-  const date = new Date(published);
-  const formattedTime = date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: 'numeric',
+  const postDate = new Date(display_time);
+  const relativeTime = getRelativeTime(display_time);
+  const exactTime = postDate.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
   });
 
   return (
@@ -39,7 +53,13 @@ export default function PostCard({
         {/* Title and Timestamp */}
         <div className="flex justify-between items-center border-b border-[#1B1F19] pb-1">
           <h2 className="text-[#E3DCCF] font-semibold text-2xl max-[640px]:text-lg">{title}</h2>
-          <span className="text-xs text-orange-400 font-bold">{formattedTime}</span>
+          <span
+            className="text-xs text-orange-400 font-bold cursor-pointer"
+            title="Click to toggle time format"
+            onClick={() => setShowExact(!showExact)}
+          >
+            {showExact ? exactTime : relativeTime}
+          </span>
         </div>
 
         {/* Summary */}
