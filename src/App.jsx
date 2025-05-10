@@ -7,6 +7,7 @@ import Header from "./components/Header";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
+  const [recap, setRecap] = useState({ summary: "", last_updated: "" });
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedIndividuals, setSelectedIndividuals] = useState([]);
   const [keywordFilter, setKeywordFilter] = useState("");
@@ -59,18 +60,20 @@ export default function App() {
       fetch("https://whfeed-backend.onrender.com/feed")
         .then((res) => res.json())
         .then((data) => {
-          setPosts(data.reverse());
+          if (Array.isArray(data)) {
+            setPosts(data.reverse());
+            setRecap({ summary: "", last_updated: "" });
+          } else {
+            setPosts((data.posts || []).reverse());
+            setRecap(data.daily_recap || { summary: "", last_updated: "" });
+          }
           setLoading(false);
         })
         .catch(() => setLoading(false));
     };
 
     fetchFeed();
-
-    const interval = setInterval(() => {
-      fetchFeed();
-    }, 30000);
-
+    const interval = setInterval(fetchFeed, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -88,21 +91,11 @@ export default function App() {
   };
 
   const renderRecapBox = (index) => {
+    if (!recap.summary) return null;
     if (windowWidth > 1410) return null;
-    if (filteredPosts.length >= 5 && index === 4) {
+    if ((filteredPosts.length >= 5 && index === 4) || (filteredPosts.length < 5 && index === filteredPosts.length - 1)) {
       return (
-        <RecapBox
-          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events.`}
-          lastUpdated="2:15 PM"
-        />
-      );
-    }
-    if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
-      return (
-        <RecapBox
-          summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events.`}
-          lastUpdated="2:15 PM"
-        />
+        <RecapBox summary={recap.summary} lastUpdated={recap.last_updated} />
       );
     }
     return null;
@@ -151,12 +144,9 @@ export default function App() {
             )}
           </div>
 
-          {windowWidth > 1410 && (
+          {windowWidth > 1410 && recap.summary && (
             <div className="w-[540px] relative translate-x-36">
-              <RecapBox
-                summary={`Today saw multiple posts from White House figures and Truth Social. Key highlights include new executive orders on trade, commentary on market conditions, and responses to global events.`}
-                lastUpdated="2:15 PM"
-              />
+              <RecapBox summary={recap.summary} lastUpdated={recap.last_updated} />
             </div>
           )}
         </div>
