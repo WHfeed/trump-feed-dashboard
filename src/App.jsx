@@ -7,7 +7,8 @@ import Header from "./components/Header";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
-  const [recap, setRecap] = useState(null);
+  const [recap, setRecap] = useState("");
+  const [recapTime, setRecapTime] = useState("");
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedIndividuals, setSelectedIndividuals] = useState([]);
   const [keywordFilter, setKeywordFilter] = useState("");
@@ -60,9 +61,9 @@ export default function App() {
       fetch("https://whfeed-backend.onrender.com/feed")
         .then((res) => res.json())
         .then((data) => {
-          const { posts: fetchedPosts = [], recap: fetchedRecap } = data;
-          setPosts(fetchedPosts.reverse());
-          setRecap(fetchedRecap);
+          setPosts(data.posts.reverse());
+          setRecap(data.recap || "");
+          setRecapTime(data.recap_time || "");
           setLoading(false);
         })
         .catch(() => setLoading(false));
@@ -94,10 +95,10 @@ export default function App() {
     if (!recap) return null;
     if (windowWidth > 1410) return null;
     if (filteredPosts.length >= 5 && index === 4) {
-      return <RecapBox summary={recap.summary} lastUpdated={recap.lastUpdated} />;
+      return <RecapBox summary={recap} lastUpdated={recapTime} />;
     }
     if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
-      return <RecapBox summary={recap.summary} lastUpdated={recap.lastUpdated} />;
+      return <RecapBox summary={recap} lastUpdated={recapTime} />;
     }
     return null;
   };
@@ -151,7 +152,7 @@ export default function App() {
 
           {windowWidth > 1410 && recap && (
             <div className="w-[540px] relative translate-x-36">
-              <RecapBox summary={recap.summary} lastUpdated={recap.lastUpdated} />
+              <RecapBox summary={recap} lastUpdated={recapTime} />
             </div>
           )}
         </div>
