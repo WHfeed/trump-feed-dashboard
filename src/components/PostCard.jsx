@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
-function getRelativeTime(isoTime) {
-  const postDate = new Date(isoTime);
+function getRelativeTime(isoString) {
+  const postDate = new Date(isoString);
   const now = new Date();
   const diff = Math.floor((now - postDate) / 1000); // in seconds
 
+  if (isNaN(diff)) return "Invalid time";
   if (diff < 60) return `${diff}s ago`;
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
@@ -30,22 +31,21 @@ export default function PostCard({
   const impactWidth =
     impactValue >= 5 ? "w-full" : impactValue >= 3 ? "w-2/4" : impactValue >= 1 ? "w-1/4" : "w-0";
 
-    let relativeTime = "N/A";
-    let exactTime = "N/A";
-    
-    try {
-      const postDate = new Date(display_time);
-      if (!isNaN(postDate)) {
-        relativeTime = getRelativeTime(postDate.toISOString());
-        exactTime = postDate.toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "numeric",
-        });
-      }
-    } catch {
-      console.warn("⚠️ Invalid display_time:", display_time);
+  let relativeTime = "N/A";
+  let exactTime = "N/A";
+
+  try {
+    const postDate = new Date(display_time);
+    if (!isNaN(postDate)) {
+      relativeTime = getRelativeTime(display_time); // ✅ Fixed
+      exactTime = postDate.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+      });
     }
-    
+  } catch {
+    console.warn("⚠️ Invalid display_time:", display_time);
+  }
 
   return (
     <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 flex space-x-4 max-[640px]:w-full max-[640px]:px-4">
@@ -73,7 +73,9 @@ export default function PostCard({
         </div>
 
         {/* Summary */}
-        <p className="text-base max-[640px]:text-sm text-[#E3DCCF] leading-relaxed max-[640px]:leading-snug">{summary}</p>
+        <p className="text-base max-[640px]:text-sm text-[#E3DCCF] leading-relaxed max-[640px]:leading-snug">
+          {summary}
+        </p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 border-t border-[#1B1F19] pt-2">
