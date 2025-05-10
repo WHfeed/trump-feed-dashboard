@@ -1,19 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function getRelativeTime(isoString) {
   const postDate = new Date(isoString);
   const now = new Date();
-  const diff = Math.floor((now.getTime() - postDate.getTime()) / 1000); // in seconds
+  const diff = Math.floor((now - postDate) / 1000); // seconds
 
   if (isNaN(diff)) return "Invalid time";
-  if (diff < 0) return "Just now";
+  if (diff < 10) return "Just now";
   if (diff < 60) return `${diff}s ago`;
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return postDate.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-  });
+  return postDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" });
 }
 
 export default function PostCard({
@@ -27,39 +24,31 @@ export default function PostCard({
   display_time,
 }) {
   const [showExact, setShowExact] = useState(false);
+  const [relativeTime, setRelativeTime] = useState("N/A");
 
   const profilePicUrl = `https://unavatar.io/${source.split(" - ").pop()?.toLowerCase() || "whitehouse.gov"}`;
   const impactValue = impact || 0;
   const hasImpact = impactValue > 0;
-
   const impactWidth =
     impactValue >= 5 ? "w-full" : impactValue >= 3 ? "w-2/4" : impactValue >= 1 ? "w-1/4" : "w-0";
 
-  let relativeTime = "N/A";
-  let exactTime = "N/A";
+  const postDate = new Date(display_time);
+  const exactTime = isNaN(postDate)
+    ? "Invalid time"
+    : postDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" });
 
-  try {
-    const postDate = new Date(display_time);
-    if (!isNaN(postDate.getTime())) {
-      relativeTime = getRelativeTime(display_time);
-      exactTime = postDate.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "numeric",
-      });
-    }
-  } catch {
-    console.warn("⚠️ Invalid display_time:", display_time);
-  }
+  useEffect(() => {
+    const updateRelative = () => setRelativeTime(getRelativeTime(display_time));
+    updateRelative(); // initial
+    const intervalId = setInterval(updateRelative, 30000); // every 30s
+    return () => clearInterval(intervalId);
+  }, [display_time]);
 
   return (
     <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 flex space-x-4 max-[640px]:w-full max-[640px]:px-4">
       {/* Avatar */}
       <div className="w-14 flex justify-center">
-        <img
-          src={profilePicUrl}
-          alt="Avatar"
-          className="w-10 h-10 rounded-full object-cover mt-2"
-        />
+        <img src={profilePicUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover mt-2" />
       </div>
 
       {/* Post Content */}
@@ -84,10 +73,7 @@ export default function PostCard({
         {/* Tags */}
         <div className="flex flex-wrap gap-2 border-t border-[#1B1F19] pt-2">
           {tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className="bg-slate-700 text-xs max-[640px]:text-[10px] text-white px-2 py-0.5 rounded-full"
-            >
+            <span key={idx} className="bg-slate-700 text-xs max-[640px]:text-[10px] text-white px-2 py-0.5 rounded-full">
               {tag}
             </span>
           ))}
@@ -101,7 +87,6 @@ export default function PostCard({
               <span className="px-2 pulse-impact">Impact</span>
               <div className="flex-grow h-px bg-gradient-to-r from-transparent via-[#1B1F19] to-transparent"></div>
             </div>
-
             <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
               <div className={`h-full bg-[#6FCF97] animate-breathe ${impactWidth}`}></div>
             </div>
