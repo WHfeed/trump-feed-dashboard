@@ -30,12 +30,22 @@ export default function PostCard({
   const impactWidth =
     impactValue >= 5 ? "w-full" : impactValue >= 3 ? "w-2/4" : impactValue >= 1 ? "w-1/4" : "w-0";
 
-  const postDate = new Date(display_time);
-  const relativeTime = getRelativeTime(display_time);
-  const exactTime = postDate.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-  });
+    let relativeTime = "N/A";
+    let exactTime = "N/A";
+    
+    try {
+      const postDate = new Date(display_time);
+      if (!isNaN(postDate)) {
+        relativeTime = getRelativeTime(postDate.toISOString());
+        exactTime = postDate.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+        });
+      }
+    } catch {
+      console.warn("⚠️ Invalid display_time:", display_time);
+    }
+    
 
   return (
     <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 flex space-x-4 max-[640px]:w-full max-[640px]:px-4">
