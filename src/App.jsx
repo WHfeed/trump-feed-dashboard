@@ -7,7 +7,7 @@ import Header from "./components/Header";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
-  const [recap, setRecap] = useState({ summary: "", last_updated: "" });
+  const [recap, setRecap] = useState(null);
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedIndividuals, setSelectedIndividuals] = useState([]);
   const [keywordFilter, setKeywordFilter] = useState("");
@@ -60,20 +60,20 @@ export default function App() {
       fetch("https://whfeed-backend.onrender.com/feed")
         .then((res) => res.json())
         .then((data) => {
-          if (Array.isArray(data)) {
-            setPosts(data.reverse());
-            setRecap({ summary: "", last_updated: "" });
-          } else {
-            setPosts((data.posts || []).reverse());
-            setRecap(data.daily_recap || { summary: "", last_updated: "" });
-          }
+          const { posts: fetchedPosts = [], recap: fetchedRecap } = data;
+          setPosts(fetchedPosts.reverse());
+          setRecap(fetchedRecap);
           setLoading(false);
         })
         .catch(() => setLoading(false));
     };
 
     fetchFeed();
-    const interval = setInterval(fetchFeed, 30000);
+
+    const interval = setInterval(() => {
+      fetchFeed();
+    }, 30000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -91,19 +91,24 @@ export default function App() {
   };
 
   const renderRecapBox = (index) => {
-    if (!recap.summary) return null;
+    if (!recap) return null;
     if (windowWidth > 1410) return null;
-    if ((filteredPosts.length >= 5 && index === 4) || (filteredPosts.length < 5 && index === filteredPosts.length - 1)) {
-      return (
-        <RecapBox summary={recap.summary} lastUpdated={recap.last_updated} />
-      );
+    if (filteredPosts.length >= 5 && index === 4) {
+      return <RecapBox summary={recap.summary} lastUpdated={recap.lastUpdated} />;
+    }
+    if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
+      return <RecapBox summary={recap.summary} lastUpdated={recap.lastUpdated} />;
     }
     return null;
   };
 
   return (
     <main className="min-h-screen text-[#E3DCCF] p-6 space-y-10">
-      <Header totalPosts={stats.totalPosts} overallImpact={stats.overallImpact} sources={stats.sources} />
+      <Header
+        totalPosts={stats.totalPosts}
+        overallImpact={stats.overallImpact}
+        sources={stats.sources}
+      />
 
       <FilterBar
         allSources={allSources}
@@ -144,9 +149,9 @@ export default function App() {
             )}
           </div>
 
-          {windowWidth > 1410 && recap.summary && (
+          {windowWidth > 1410 && recap && (
             <div className="w-[540px] relative translate-x-36">
-              <RecapBox summary={recap.summary} lastUpdated={recap.last_updated} />
+              <RecapBox summary={recap.summary} lastUpdated={recap.lastUpdated} />
             </div>
           )}
         </div>
