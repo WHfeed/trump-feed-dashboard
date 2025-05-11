@@ -92,14 +92,20 @@ export default function App() {
     },
   };
 
+  const getRecapSummary = () =>
+    typeof recap === "string" ? recap : recap?.recap || "";
+
+  const getRecapTime = () =>
+    typeof recap === "object" ? recap.recap_time : null;
+
   const renderRecapBox = (index) => {
     if (!recap) return null;
     if (windowWidth > 1410) return null;
     if (filteredPosts.length >= 5 && index === 4) {
-      return <RecapBox summary={recap.recap} lastUpdated={recap.recap_time} />;
+      return <RecapBox summary={getRecapSummary()} lastUpdated={getRecapTime()} />;
     }
     if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
-      return <RecapBox summary={recap.recap} lastUpdated={recap.recap_time} />;
+      return <RecapBox summary={getRecapSummary()} lastUpdated={getRecapTime()} />;
     }
     return null;
   };
@@ -153,7 +159,7 @@ export default function App() {
 
           {windowWidth > 1410 && recap && (
             <div className="w-[540px] relative translate-x-36">
-              <RecapBox summary={recap.recap} lastUpdated={recap.recap_time} />
+              <RecapBox summary={getRecapSummary()} lastUpdated={getRecapTime()} />
             </div>
           )}
         </div>

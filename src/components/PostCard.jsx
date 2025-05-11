@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-function getRelativeTime(postTime, now) {
-  const postDate = new Date(postTime);
+function getRelativeTime(displayTime, now = new Date()) {
+  const postDate = new Date(displayTime);
   const diff = Math.floor((now - postDate) / 1000); // in seconds
 
   if (isNaN(diff)) return "Invalid time";
@@ -21,15 +21,14 @@ export default function PostCard({
   impact = 0,
   source,
   display_time,
-  currentTime, // 🆕 passed down from App.jsx
+  currentTime,
 }) {
   const [showExact, setShowExact] = useState(false);
 
   const profilePicUrl = `https://unavatar.io/${source.split(" - ").pop()?.toLowerCase() || "whitehouse.gov"}`;
-  const impactValue = impact || 0;
-  const hasImpact = impactValue > 0;
+  const hasImpact = impact > 0;
   const impactWidth =
-    impactValue >= 5 ? "w-full" : impactValue >= 3 ? "w-2/4" : impactValue >= 1 ? "w-1/4" : "w-0";
+    impact >= 5 ? "w-full" : impact >= 3 ? "w-2/4" : impact >= 1 ? "w-1/4" : "w-0";
 
   const postDate = new Date(display_time);
   const exactTime = isNaN(postDate)
