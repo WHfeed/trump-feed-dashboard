@@ -142,7 +142,7 @@ export default function App() {
             {filteredPosts.length === 0 ? (
               <p className="text-center text-gray-400">No posts match your filters. Try adjusting them.</p>
             ) : (
-              filteredPosts.map((post, index) => (
+              [...filteredPosts].reverse().map((post, index) => (
                 <React.Fragment key={post.link}>
                   <PostCard {...post} currentTime={currentTime} />
                   {renderRecapBox(index)}
