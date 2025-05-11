@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-function getRelativeTime(isoString) {
-  const postDate = new Date(isoString);
-  const now = new Date();
-  const diff = Math.floor((now - postDate) / 1000); // seconds
+function getRelativeTime(postTime, now) {
+  const postDate = new Date(postTime);
+  const diff = Math.floor((now - postDate) / 1000); // in seconds
 
   if (isNaN(diff)) return "Invalid time";
   if (diff < 10) return "Just now";
@@ -22,9 +21,9 @@ export default function PostCard({
   impact = 0,
   source,
   display_time,
+  currentTime, // 🆕 passed down from App.jsx
 }) {
   const [showExact, setShowExact] = useState(false);
-  const [relativeTime, setRelativeTime] = useState("N/A");
 
   const profilePicUrl = `https://unavatar.io/${source.split(" - ").pop()?.toLowerCase() || "whitehouse.gov"}`;
   const impactValue = impact || 0;
@@ -37,12 +36,7 @@ export default function PostCard({
     ? "Invalid time"
     : postDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" });
 
-  useEffect(() => {
-    const updateRelative = () => setRelativeTime(getRelativeTime(display_time));
-    updateRelative(); // initial
-    const intervalId = setInterval(updateRelative, 30000); // every 30s
-    return () => clearInterval(intervalId);
-  }, [display_time]);
+  const relativeTime = getRelativeTime(display_time, currentTime);
 
   return (
     <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 flex space-x-4 max-[640px]:w-full max-[640px]:px-4">

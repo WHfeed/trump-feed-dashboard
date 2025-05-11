@@ -7,8 +7,8 @@ import Header from "./components/Header";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
-  const [recap, setRecap] = useState("");
-  const [recapTime, setRecapTime] = useState("");
+  const [recap, setRecap] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date()); // ⏱️ global clock
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedIndividuals, setSelectedIndividuals] = useState([]);
   const [keywordFilter, setKeywordFilter] = useState("");
@@ -21,6 +21,32 @@ export default function App() {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    // 🔁 Update current time every 30 seconds
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const fetchFeed = () => {
+      fetch("https://whfeed-backend.onrender.com/feed")
+        .then((res) => res.json())
+        .then((data) => {
+          const { posts: fetchedPosts = [], recap: fetchedRecap } = data;
+          setPosts(fetchedPosts.reverse());
+          setRecap(fetchedRecap);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    };
+
+    fetchFeed();
+    const interval = setInterval(fetchFeed, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const allSources = Array.from(new Set(posts.map((p) => p.source)));
@@ -46,37 +72,13 @@ export default function App() {
       keywordFilter === "" ||
       (post.title && post.title.toLowerCase().includes(keywordFilter.toLowerCase())) ||
       (post.summary && post.summary.toLowerCase().includes(keywordFilter.toLowerCase()));
-
     const impactValue = post.impact || 0;
     const matchesImpact =
       impactFilter === "all" ||
       (impactFilter === "medium" && impactValue >= 3) ||
       (impactFilter === "high" && impactValue >= 5);
-
     return matchesSource && matchesIndividual && matchesKeyword && matchesImpact;
   });
-
-  useEffect(() => {
-    const fetchFeed = () => {
-      fetch("https://whfeed-backend.onrender.com/feed")
-        .then((res) => res.json())
-        .then((data) => {
-          setPosts(data.posts.reverse());
-          setRecap(data.recap || "");
-          setRecapTime(data.recap_time || "");
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    };
-
-    fetchFeed();
-
-    const interval = setInterval(() => {
-      fetchFeed();
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const stats = {
     totalPosts: posts.length,
@@ -95,10 +97,10 @@ export default function App() {
     if (!recap) return null;
     if (windowWidth > 1410) return null;
     if (filteredPosts.length >= 5 && index === 4) {
-      return <RecapBox summary={recap} lastUpdated={recapTime} />;
+      return <RecapBox summary={recap} lastUpdated={new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }) + " UTC"} />;
     }
     if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
-      return <RecapBox summary={recap} lastUpdated={recapTime} />;
+      return <RecapBox summary={recap} lastUpdated={new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }) + " UTC"} />;
     }
     return null;
   };
@@ -143,7 +145,7 @@ export default function App() {
             ) : (
               filteredPosts.map((post, index) => (
                 <React.Fragment key={index}>
-                  <PostCard {...post} />
+                  <PostCard {...post} currentTime={currentTime} />
                   {renderRecapBox(index)}
                 </React.Fragment>
               ))
@@ -152,7 +154,7 @@ export default function App() {
 
           {windowWidth > 1410 && recap && (
             <div className="w-[540px] relative translate-x-36">
-              <RecapBox summary={recap} lastUpdated={recapTime} />
+              <RecapBox summary={recap} lastUpdated={new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }) + " UTC"} />
             </div>
           )}
         </div>
