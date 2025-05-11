@@ -8,7 +8,7 @@ import Header from "./components/Header";
 export default function App() {
   const [posts, setPosts] = useState([]);
   const [recap, setRecap] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date()); // ⏱️ global clock
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedIndividuals, setSelectedIndividuals] = useState([]);
   const [keywordFilter, setKeywordFilter] = useState("");
@@ -24,7 +24,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // 🔁 Update current time every 30 seconds
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 30000);
@@ -97,10 +96,10 @@ export default function App() {
     if (!recap) return null;
     if (windowWidth > 1410) return null;
     if (filteredPosts.length >= 5 && index === 4) {
-      return <RecapBox summary={recap} lastUpdated={new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }) + " UTC"} />;
+      return <RecapBox summary={recap.recap} lastUpdated={recap.recap_time} />;
     }
     if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
-      return <RecapBox summary={recap} lastUpdated={new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }) + " UTC"} />;
+      return <RecapBox summary={recap.recap} lastUpdated={recap.recap_time} />;
     }
     return null;
   };
@@ -143,9 +142,8 @@ export default function App() {
             {filteredPosts.length === 0 ? (
               <p className="text-center text-gray-400">No posts match your filters. Try adjusting them.</p>
             ) : (
-              filteredPosts.map((post) => (
+              filteredPosts.map((post, index) => (
                 <React.Fragment key={post.link}>
-              
                   <PostCard {...post} currentTime={currentTime} />
                   {renderRecapBox(index)}
                 </React.Fragment>
@@ -155,7 +153,7 @@ export default function App() {
 
           {windowWidth > 1410 && recap && (
             <div className="w-[540px] relative translate-x-36">
-              <RecapBox summary={recap} lastUpdated={new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }) + " UTC"} />
+              <RecapBox summary={recap.recap} lastUpdated={recap.recap_time} />
             </div>
           )}
         </div>
