@@ -35,9 +35,9 @@ export default function App() {
       fetch("https://whfeed-backend.onrender.com/feed")
         .then((res) => res.json())
         .then((data) => {
-          const { posts: fetchedPosts = [], recap: fetchedRecap } = data;
+          const { posts: fetchedPosts = [], recap: recapText, recap_time } = data;
           setPosts(fetchedPosts.reverse());
-          setRecap(fetchedRecap);
+          setRecap({ text: recapText, time: recap_time });
           setLoading(false);
         })
         .catch(() => setLoading(false));
@@ -92,20 +92,14 @@ export default function App() {
     },
   };
 
-  const getRecapSummary = () =>
-    typeof recap === "string" ? recap : recap?.recap || "";
-
-  const getRecapTime = () =>
-    typeof recap === "object" ? recap.recap_time : null;
-
   const renderRecapBox = (index) => {
     if (!recap) return null;
     if (windowWidth > 1410) return null;
     if (filteredPosts.length >= 5 && index === 4) {
-      return <RecapBox summary={getRecapSummary()} lastUpdated={getRecapTime()} />;
+      return <RecapBox summary={recap.text} lastUpdated={recap.time} />;
     }
     if (filteredPosts.length < 5 && index === filteredPosts.length - 1) {
-      return <RecapBox summary={getRecapSummary()} lastUpdated={getRecapTime()} />;
+      return <RecapBox summary={recap.text} lastUpdated={recap.time} />;
     }
     return null;
   };
@@ -159,7 +153,7 @@ export default function App() {
 
           {windowWidth > 1410 && recap && (
             <div className="w-[540px] relative translate-x-36">
-              <RecapBox summary={getRecapSummary()} lastUpdated={getRecapTime()} />
+              <RecapBox summary={recap.text} lastUpdated={recap.time} />
             </div>
           )}
         </div>
