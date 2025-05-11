@@ -7,23 +7,29 @@ export default function Header({ totalPosts, overallImpact, sources }) {
 
       {/* Logo */}
       <div className="flex justify-center md:justify-start">
-        <img src="/logo2.png" alt="White House Feed Logo" className="h-64 max-[640px]:h-40 min-w-[120px] object-contain" />
+        <img
+          src="/logo2.png"
+          alt="White House Feed Logo"
+          className="h-64 max-[640px]:h-40 min-w-[120px] object-contain"
+        />
       </div>
 
       {/* Vertical Divider */}
       <div className="flex justify-center">
-        <div className="w-px bg-gradient-to-b from-transparent via-[#6a805b] to-transparent h-64 max-[640px]:h-40"></div>
+        <div className="w-px bg-gradient-to-b from-transparent via-[#6a805b] to-transparent h-64 max-[640px]:h-40 max-[459px]:h-28"></div>
       </div>
 
       {/* Small screen StatsBox */}
-      <div className="hidden max-[1056px]:flex justify-start items-start ml-4 max-[640px]:ml-2 max-[640px]:scale-90">
+      <div className="hidden max-[1056px]:flex justify-start items-start ml-4 max-[640px]:ml-2 max-[640px]:scale-90 max-[459px]:scale-75">
         <StatsBox totalPosts={totalPosts} overallImpact={overallImpact} sources={sources} />
       </div>
 
       {/* Text Section */}
-      <div className="flex flex-col justify-center space-y-4 max-[640px]:space-y-2 max-w-xl mx-auto md:mx-0 text-center md:text-left pl-4 max-[640px]:pl-2 max-[1056px]:col-span-full max-[1056px]:mt-8 max-[640px]:mt-4 max-[1056px]:text-center">
-        <h1 className="text-xl max-[640px]:text-lg font-bold text-[#E3DCCF]">Stay Ahead with White House Feed</h1>
-        <p className="text-base max-[640px]:text-sm leading-relaxed max-[640px]:leading-snug">
+      <div className="flex flex-col justify-center space-y-4 max-[640px]:space-y-2 max-w-xl mx-auto md:mx-0 text-center md:text-left pl-4 max-[640px]:pl-2 max-[459px]:px-2 max-[1056px]:col-span-full max-[1056px]:mt-8 max-[640px]:mt-4 max-[459px]:mt-2 max-[1056px]:text-center">
+        <h1 className="text-xl max-[640px]:text-lg max-[459px]:text-base font-bold text-[#E3DCCF]">
+          Stay Ahead with White House Feed
+        </h1>
+        <p className="text-base max-[640px]:text-sm max-[459px]:text-xs leading-relaxed max-[640px]:leading-snug max-[459px]:leading-snug">
           Stay ahead of policy and market shifts with{" "}
           <span className="text-[#6FCF97] font-semibold">White House Feed</span> — your real-time source
           for breaking news, political statements, executive actions, and influential posts from top U.S. leaders.
