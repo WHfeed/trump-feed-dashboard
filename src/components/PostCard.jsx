@@ -25,7 +25,6 @@ export default function PostCard({
 }) {
   const [showExact, setShowExact] = useState(false);
 
-  const profilePicUrl = `https://unavatar.io/${source.split(" - ").pop()?.toLowerCase() || "whitehouse.gov"}`;
   const hasImpact = impact > 0;
   const impactWidth =
     impact >= 5 ? "w-full" : impact >= 3 ? "w-2/4" : impact >= 1 ? "w-1/4" : "w-0";
@@ -38,14 +37,9 @@ export default function PostCard({
   const relativeTime = getRelativeTime(display_time, currentTime);
 
   return (
-    <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 flex space-x-4 max-[640px]:w-full max-[640px]:px-4">
-      {/* Avatar */}
-      <div className="w-14 flex justify-center">
-        <img src={profilePicUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover mt-2" />
-      </div>
-
+    <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 max-[640px]:w-full max-[640px]:px-4">
       {/* Post Content */}
-      <div className="flex-1 space-y-4">
+      <div className="space-y-4">
         {/* Title and Timestamp */}
         <div className="flex justify-between items-center border-b border-[#1B1F19] pb-1">
           <h2 className="text-[#E3DCCF] font-semibold text-2xl max-[640px]:text-lg">{title}</h2>
