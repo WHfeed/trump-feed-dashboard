@@ -3,24 +3,44 @@ import StatsBox from "./StatsBox";
 
 export default function Header({ totalPosts, overallImpact, sources }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[auto_1px_1fr_auto_auto] max-[1056px]:grid-cols-[auto_1px_auto] gap-4 max-[640px]:gap-2 items-start mt-6 max-[1056px]:w-full max-[1056px]:max-w-screen-sm max-[1056px]:justify-center mx-auto">
+    <div
+      className="
+        grid 
+        grid-cols-1 
+        md:grid-cols-[auto_1px_1fr_auto_auto] 
+        max-[1056px]:grid-cols-[auto_1px_auto] 
+        gap-4 
+        max-[640px]:gap-2 
+        items-start 
+        mt-6 
+        max-[1056px]:w-full 
+        max-[1056px]:max-w-screen-sm 
+        max-[1056px]:justify-center 
+        mx-auto
 
+        max-[459px]:flex 
+        max-[459px]:flex-col 
+        max-[459px]:items-center 
+        max-[459px]:gap-2 
+        max-[459px]:mt-4
+      "
+    >
       {/* Logo */}
       <div className="flex justify-center md:justify-start">
         <img
           src="/logo2.png"
           alt="White House Feed Logo"
-          className="h-64 max-[640px]:h-40 min-w-[120px] object-contain"
+          className="h-64 max-[640px]:h-40 max-[459px]:h-32 object-contain"
         />
       </div>
 
       {/* Vertical Divider */}
       <div className="flex justify-center">
-        <div className="w-px bg-gradient-to-b from-transparent via-[#6a805b] to-transparent h-64 max-[640px]:h-40 max-[459px]:h-28"></div>
+        <div className="w-px bg-gradient-to-b from-transparent via-[#6a805b] to-transparent h-64 max-[640px]:h-40 max-[459px]:h-24"></div>
       </div>
 
-      {/* Small screen StatsBox */}
-      <div className="hidden max-[1056px]:flex justify-start items-start ml-4 max-[640px]:ml-2 max-[640px]:scale-90 max-[459px]:scale-75">
+      {/* StatsBox (small screens) */}
+      <div className="hidden max-[1056px]:flex justify-start items-start ml-4 max-[640px]:ml-2 max-[640px]:scale-90 max-[459px]:scale-75 max-[459px]:ml-0">
         <StatsBox totalPosts={totalPosts} overallImpact={overallImpact} sources={sources} />
       </div>
 
@@ -41,7 +61,7 @@ export default function Header({ totalPosts, overallImpact, sources }) {
         </p>
       </div>
 
-      {/* Neon Image */}
+      {/* Neon Image (large screens only) */}
       <div className="hidden 2xl:block">
         <img
           src="/whitehouse-neon.png"
@@ -50,7 +70,7 @@ export default function Header({ totalPosts, overallImpact, sources }) {
         />
       </div>
 
-      {/* Large screen StatsBox */}
+      {/* StatsBox (large screens) */}
       <div className="flex justify-center lg:flex-1 lg:justify-end lg:pl-12 max-[1056px]:hidden">
         <StatsBox totalPosts={totalPosts} overallImpact={overallImpact} sources={sources} />
       </div>
