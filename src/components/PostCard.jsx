@@ -53,7 +53,7 @@ export default function PostCard({
         </div>
 
         {/* Summary */}
-        <p className="text-base max-[640px]:text-sm text-[#E3DCCF] leading-relaxed max-[640px]:leading-snug">
+        <p className="text-base max-[640px]:text-[15px] text-[#E3DCCF] leading-relaxed max-[640px]:leading-[1.5]">
           {summary}
         </p>
 
