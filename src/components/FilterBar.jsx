@@ -25,7 +25,7 @@ export default function FilterBar({
       </div>
 
       {/* Filter Buttons */}
-      <div className="flex justify-center space-x-10">
+      <div className="flex justify-center space-x-6 max-[450px]:space-x-3">
         {["Sources", "Individuals", "Keywords", "Impact"].map((label) => {
           const key = label.toLowerCase();
           const isOpen = activeDropdown === key;
@@ -34,8 +34,9 @@ export default function FilterBar({
             <button
               key={key}
               onClick={() => toggleDropdown(key)}
-              className="text-[#E3DCCF] font-semibold text-lg hover:text-[#F5E9D0] transition-colors duration-200"
+              className="text-[#E3DCCF] font-semibold text-lg max-[450px]:text-base hover:text-[#F5E9D0] transition-colors duration-200"
             >
+
               <span className="hidden max-[560px]:inline"></span>
               <span className="max-[560px]:hidden">{arrow}</span> {label}
             </button>
