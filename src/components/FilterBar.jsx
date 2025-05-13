@@ -59,7 +59,7 @@ export default function FilterBar({
                       : "bg-[#374C44] text-white"
                   }`}
                 >
-                  {source}
+                  {source.replace(" (HTML)", "")}
                 </button>
               ))}
 
