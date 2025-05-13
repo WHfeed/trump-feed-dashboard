@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PostCard from "./components/PostCard";
 import StatsBox from "./components/StatsBox";
-import RecapBox from "./components/Recapbox";
+import RecapBox from "./components/RecapBox";
 import FilterBar from "./components/FilterBar";
 import Header from "./components/Header";
 
@@ -16,6 +16,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [visibleCount, setVisibleCount] = useState(12); // 👈 Show first 12 posts
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -104,6 +105,9 @@ export default function App() {
     sources: sourceCounts,
   };
 
+  const handleShowMore = () => {
+    setVisibleCount((prev) => prev + 12);
+  };
 
   const renderRecapBox = (index) => {
     if (!recap) return null;
@@ -155,12 +159,25 @@ export default function App() {
             {filteredPosts.length === 0 ? (
               <p className="text-center text-gray-400">No posts match your filters. Try adjusting them.</p>
             ) : (
-              [...filteredPosts].reverse().map((post, index) => (
-                <React.Fragment key={post.link}>
-                  <PostCard {...post} currentTime={currentTime} />
-                  {renderRecapBox(index)}
-                </React.Fragment>
-              ))
+              <>
+                {[...filteredPosts].reverse().slice(0, visibleCount).map((post, index) => (
+                  <React.Fragment key={post.link}>
+                    <PostCard {...post} currentTime={currentTime} />
+                    {renderRecapBox(index)}
+                  </React.Fragment>
+                ))}
+
+                {visibleCount < filteredPosts.length && (
+                  <div className="flex justify-center mt-6">
+                    <button
+                      onClick={handleShowMore}
+                      className="bg-[#6FCF97] text-black font-semibold px-6 py-2 rounded hover:bg-[#5ABB82] transition"
+                    >
+                      Show More Posts
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
