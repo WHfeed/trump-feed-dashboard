@@ -79,18 +79,31 @@ export default function App() {
     return matchesSource && matchesIndividual && matchesKeyword && matchesImpact;
   });
 
+  const whiteHouseGroup = [
+    "White House",
+    "Federal Reserve",
+    "Department of State",
+    "Customs and Border Protection",
+    "Treasury (HTML)",
+    "SEC (HTML)",
+    "DHS (HTML)"
+  ];
+
+  const sourceCounts = {};
+  posts.forEach(post => {
+    const label = whiteHouseGroup.includes(post.source) ? "White House" : post.source;
+    sourceCounts[label] = (sourceCounts[label] || 0) + 1;
+  });
+
   const stats = {
     totalPosts: posts.length,
     overallImpact:
       posts.reduce((acc, post) => acc + (post.impact || 0), 0) >= posts.length * 3
         ? "Medium"
         : "Low",
-    sources: {
-      "White House": posts.filter((p) => p.source.includes("whitehouse")).length,
-      "Truth Social": posts.filter((p) => p.source.includes("Truth Social")).length,
-      "X.com": posts.filter((p) => p.source.includes("X -")).length,
-    },
+    sources: sourceCounts,
   };
+
 
   const renderRecapBox = (index) => {
     if (!recap) return null;
