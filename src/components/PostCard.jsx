@@ -41,10 +41,10 @@ export default function PostCard({
       {/* Post Content */}
       <div className="space-y-4">
         {/* Title and Timestamp */}
-        <div className="flex justify-between items-center border-b border-[#1B1F19] pb-1">
+        <div className="flex justify-between items-start border-b border-[#1B1F19] pb-1">
           <h2 className="text-[#E3DCCF] font-semibold text-2xl max-[640px]:text-lg">{title}</h2>
           <span
-            className="text-xs text-orange-400 font-bold cursor-pointer"
+            className="text-xs text-orange-400 font-bold cursor-pointer whitespace-nowrap pl-3 relative top-[7px] shrink-0"
             title="Click to toggle time format"
             onClick={() => setShowExact(!showExact)}
           >
