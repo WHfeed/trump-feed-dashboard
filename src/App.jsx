@@ -171,7 +171,7 @@ export default function App() {
                   <div className="flex justify-center mt-6">
                     <button
                       onClick={handleShowMore}
-                      className="bg-[#6FCF97] text-black font-semibold px-6 py-2 rounded hover:bg-[#5ABB82] transition"
+                      className="relative inline-flex items-center px-6 py-2 rounded-full bg-[#2F403C] text-orange-400 font-semibold shadow-md border border-orange-400 transition-all duration-300 hover:scale-105 pro-neon-glow"
                     >
                       Show More Posts
                     </button>
