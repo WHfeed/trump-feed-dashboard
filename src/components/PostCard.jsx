@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function getRelativeTime(displayTime, now = new Date()) {
   const postDate = new Date(displayTime);
-  const diff = Math.floor((now - postDate) / 1000); // in seconds
+  const diff = Math.floor((now - postDate) / 1000);
 
   if (isNaN(diff)) return "Invalid time";
   if (diff < 10) return "Just now";
@@ -39,7 +39,7 @@ export default function PostCard({
   const relativeTime = getRelativeTime(display_time, currentTime);
 
   return (
-    <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 max-[640px]:w-full max-[640px]:px-4">
+    <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 max-[640px]:w-full max-[640px]:px-4 transition-all duration-300">
       {/* Post Content */}
       <div className="space-y-4">
         {/* Title and Timestamp */}
@@ -54,8 +54,12 @@ export default function PostCard({
           </span>
         </div>
 
-        {/* Summary / Expanded Summary */}
-        <p className="text-base max-[640px]:text-[15px] text-[#E3DCCF] leading-relaxed max-[640px]:leading-[1.5] whitespace-pre-line">
+        {/* Summary */}
+        <p
+          className={`text-base max-[640px]:text-[15px] text-[#E3DCCF] leading-relaxed max-[640px]:leading-[1.5] whitespace-pre-line transition-all duration-300 ease-in-out ${
+            expanded ? "opacity-100" : "opacity-90"
+          }`}
+        >
           {expanded && summary_expanded ? summary_expanded : summary}
         </p>
 
@@ -63,11 +67,11 @@ export default function PostCard({
         {summary_expanded && (
           <div className="text-center text-orange-400 font-semibold text-sm cursor-pointer select-none" onClick={() => setExpanded(!expanded)}>
             <div className="flex items-center justify-center space-x-2 mt-1 mb-1">
-              <div className="flex-grow h-px bg-orange-400 opacity-50" />
+              <div className="w-1/4 h-px bg-orange-400 opacity-50" />
               <div className="flex items-center space-x-1">
-                <span>{expanded ? "▼ Show Less ▼" : "▶ Show More ◀"}</span>
+                <span>{expanded ? "▲ Show Less ▲" : "▼ Show More ▼"}</span>
               </div>
-              <div className="flex-grow h-px bg-orange-400 opacity-50" />
+              <div className="w-1/4 h-px bg-orange-400 opacity-50" />
             </div>
           </div>
         )}
