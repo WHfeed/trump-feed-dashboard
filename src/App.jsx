@@ -81,14 +81,15 @@ export default function App() {
   });
 
   const whiteHouseGroup = [
-    "White House",
-    "Federal Reserve",
-    "Department of State",
-    "Customs and Border Protection",
-    "Treasury (HTML)",
-    "SEC (HTML)",
-    "DHS (HTML)"
-  ];
+  "White House",
+  "Federal Reserve",
+  "Department of State",
+  "Customs and Border Protection",
+  "Treasury",
+  "SEC",
+  "DHS",
+  "Commerce Department"
+];
 
   const sourceCounts = {};
   posts.forEach(post => {
