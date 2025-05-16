@@ -16,6 +16,7 @@ export default function PostCard({
   title,
   link,
   summary,
+  summary_expanded,
   tags = [],
   sentiment,
   impact = 0,
@@ -24,6 +25,7 @@ export default function PostCard({
   currentTime,
 }) {
   const [showExact, setShowExact] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const hasImpact = impact > 0;
   const impactWidth =
@@ -52,10 +54,23 @@ export default function PostCard({
           </span>
         </div>
 
-        {/* Summary */}
-        <p className="text-base max-[640px]:text-[15px] text-[#E3DCCF] leading-relaxed max-[640px]:leading-[1.5]">
-          {summary}
+        {/* Summary / Expanded Summary */}
+        <p className="text-base max-[640px]:text-[15px] text-[#E3DCCF] leading-relaxed max-[640px]:leading-[1.5] whitespace-pre-line">
+          {expanded && summary_expanded ? summary_expanded : summary}
         </p>
+
+        {/* Toggle Button */}
+        {summary_expanded && (
+          <div className="text-center text-orange-400 font-semibold text-sm cursor-pointer select-none" onClick={() => setExpanded(!expanded)}>
+            <div className="flex items-center justify-center space-x-2 mt-1 mb-1">
+              <div className="flex-grow h-px bg-orange-400 opacity-50" />
+              <div className="flex items-center space-x-1">
+                <span>{expanded ? "▼ Show Less ▼" : "▶ Show More ◀"}</span>
+              </div>
+              <div className="flex-grow h-px bg-orange-400 opacity-50" />
+            </div>
+          </div>
+        )}
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 border-t border-[#1B1F19] pt-2">
