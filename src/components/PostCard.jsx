@@ -65,16 +65,26 @@ export default function PostCard({
 
         {/* Toggle Button */}
         {summary_expanded && (
-          <div className="text-center text-orange-400 font-semibold text-sm cursor-pointer select-none" onClick={() => setExpanded(!expanded)}>
-            <div className="flex items-center justify-center space-x-2 mt-1 mb-1">
-              <div className="w-1/4 h-px bg-orange-400 opacity-50" />
-              <div className="flex items-center space-x-1">
-                <span>{expanded ? "▲ Show Less ▲" : "▼ Show More ▼"}</span>
-              </div>
-              <div className="w-1/4 h-px bg-orange-400 opacity-50" />
-            </div>
+          <div className="text-center mt-2">
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="px-3 py-1 rounded-md text-sm font-medium text-orange-400 bg-[#3B4C45] hover:bg-[#4F6159] transition-all"
+            >
+              {expanded ? (
+                <span className="flex items-center justify-center space-x-1">
+                  <span className="text-xs">▲</span>
+                  <span>Show Less</span>
+                </span>
+              ) : (
+                <span className="flex items-center justify-center space-x-1">
+                  <span className="text-xs">▼</span>
+                  <span>Show More</span>
+                </span>
+              )}
+            </button>
           </div>
         )}
+
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 border-t border-[#1B1F19] pt-2">
