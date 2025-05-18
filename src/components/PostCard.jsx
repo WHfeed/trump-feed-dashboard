@@ -55,13 +55,18 @@ export default function PostCard({
         </div>
 
         {/* Summary */}
-        <p
-          className={`text-base max-[640px]:text-[15px] text-[#E3DCCF] leading-relaxed max-[640px]:leading-[1.5] whitespace-pre-line transition-all duration-300 ease-in-out ${
-            expanded ? "opacity-100" : "opacity-90"
-          }`}
+        <div
+          className={`overflow-hidden transition-[max-height] duration-500 ease-in-out`}
+          style={{
+            maxHeight: expanded ? "500px" : "70px"
+          }}
         >
-          {expanded && summary_expanded ? summary_expanded : summary}
-        </p>
+          <p
+            className="text-base max-[640px]:text-[15px] text-[#E3DCCF] leading-relaxed max-[640px]:leading-[1.5] whitespace-pre-line"
+          >
+            {expanded && summary_expanded ? summary_expanded : summary}
+          </p>
+        </div>
 
         {/* Toggle Button */}
         {summary_expanded && (
