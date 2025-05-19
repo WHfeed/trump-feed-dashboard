@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Navbar from "./components/Navbar";
 import PostCard from "./components/PostCard";
 import StatsBox from "./components/StatsBox";
 import RecapBox from "./components/RecapBox";
@@ -122,12 +123,15 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen text-[#E3DCCF] p-6 space-y-10">
-      <Header
-        totalPosts={stats.totalPosts}
-        overallImpact={stats.overallImpact}
-        sources={stats.sources}
-      />
+    <>
+      <Navbar />
+
+      <main className="min-h-screen text-[#E3DCCF] p-6 space-y-10 pt-0">
+        <Header
+          totalPosts={stats.totalPosts}
+          overallImpact={stats.overallImpact}
+          sources={stats.sources}
+        />
 
       <FilterBar
         allSources={allSources}
@@ -193,5 +197,6 @@ export default function App() {
         🦅 Powered by <span className="font-semibold animate-breathe">EagleEye AI</span>
       </footer>
     </main>
+    </>
   );
 }
