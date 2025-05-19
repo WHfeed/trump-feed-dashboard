@@ -58,7 +58,7 @@ export default function PostCard({
         <div
           className={`overflow-hidden transition-[max-height] duration-500 ease-in-out`}
           style={{
-            maxHeight: expanded ? "500px" : "70px"
+            maxHeight: expanded ? "500px" : "110px"
           }}
         >
           <p
