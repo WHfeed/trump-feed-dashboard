@@ -18,7 +18,16 @@ export default function Header({ totalPosts, overallImpact, sources }) {
           "
         >
           <div
-            className="w-full h-[260px] bg-contain bg-no-repeat bg-center"
+            className="
+              w-full
+              h-[260px]
+              max-[640px]:h-[240px]
+              max-[600px]:h-[200px]
+              max-[540px]:h-[180px]
+              max-[480px]:h-[160px]
+              max-[420px]:h-[140px]
+              bg-contain bg-no-repeat bg-center
+            "
             style={{ backgroundImage: "url('/logo2.png')" }}
           ></div>
         </div>
@@ -30,14 +39,17 @@ export default function Header({ totalPosts, overallImpact, sources }) {
       </div>
 
       {/* Small screen StatsBox */}
-      <div className="hidden max-[1056px]:flex justify-start items-start ml-4 min-w-0 max-[599px]:mb-1">
-        <div className="scale-100 max-[600px]:scale-[0.9] max-[540px]:scale-[0.8] max-[480px]:scale-[0.7] max-[420px]:scale-[0.6] origin-left">
-          <StatsBox totalPosts={totalPosts} overallImpact={overallImpact} sources={sources} />
+      <div className="hidden max-[1056px]:flex items-start ml-2 w-full">
+        <div className="w-full max-w-[240px] flex-shrink-0">
+          <div className="scale-100 max-[600px]:scale-[0.9] max-[540px]:scale-[0.85] max-[480px]:scale-[0.8] max-[460px]:scale-[0.75] max-[420px]:scale-[0.70] max-[410px]:scale-[0.65] max-[380px]:scale-[0.60] origin-top">
+            <StatsBox totalPosts={totalPosts} overallImpact={overallImpact} sources={sources} />
+          </div>
         </div>
       </div>
 
+
       {/* Text Section */}
-      <div className="flex flex-col justify-center space-y-4 max-w-xl mx-auto md:mx-0 text-center md:text-left pl-4 pr-4 max-[600px]:pl-2 max-[600px]:pr-2 max-[1056px]:col-span-full max-[1056px]:mt-4 max-[1056px]:text-center">
+      <div className="flex flex-col justify-center space-y-4 max-w-xl mx-auto md:mx-0 text-center md:text-left pl-4 pr-4 max-[600px]:pl-2 max-[600px]:pr-2 max-[1056px]:col-span-full max-[1056px]:mt-4 max-[599px]:mt-0 max-[520px]:-mt-2 max-[500px]:-mt-4 max-[480px]:-mt-6 max-[460px]:-mt-8 max-[440px]:-mt-10 max-[420px]:-mt-14 max-[390px]:-mt-16 max-[360px]:-mt-18 max-[330px]:-mt-20">
 
         {/* Line above text (only on small screens) */}
         <div className="w-full max-[599px]:block min-[600px]:hidden mb-2">
