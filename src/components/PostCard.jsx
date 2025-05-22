@@ -22,6 +22,7 @@ export default function PostCard({
   impact = 0,
   source,
   display_time,
+  timestamp,
   currentTime,
 }) {
   const [showExact, setShowExact] = useState(false);
@@ -31,12 +32,12 @@ export default function PostCard({
   const impactWidth =
     impact >= 5 ? "w-full" : impact >= 3 ? "w-2/4" : impact >= 1 ? "w-1/4" : "w-0";
 
-  const postDate = new Date(display_time);
+  const postDate = new Date(display_time || timestamp);
   const exactTime = isNaN(postDate)
     ? "Invalid time"
     : postDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" });
 
-  const relativeTime = getRelativeTime(display_time, currentTime);
+  const relativeTime = getRelativeTime(display_time || timestamp, currentTime);
 
   return (
     <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 max-[640px]:w-full max-[640px]:px-4 transition-all duration-300">
