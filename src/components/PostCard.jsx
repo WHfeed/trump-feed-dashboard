@@ -2,14 +2,30 @@ import React, { useState } from "react";
 
 function getRelativeTime(displayTime, now = new Date()) {
   const postDate = new Date(displayTime);
-  const diff = Math.floor((now - postDate) / 1000);
+  if (isNaN(postDate)) return "Invalid time";
 
-  if (isNaN(diff)) return "Invalid time";
-  if (diff < 10) return "Just now";
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return postDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" });
+  const diffSec = Math.floor((now - postDate) / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHr = Math.floor(diffMin / 60);
+  const diffDays = Math.floor(diffHr / 24);
+
+  if (diffSec < 10) return "Just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffHr < 24) return `${diffHr}h ago`;
+  if (diffDays === 1) {
+    return `Yesterday, ${postDate.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    })}`;
+  }
+  if (diffDays <= 3) return `${diffDays} days ago`;
+  return postDate.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 export default function PostCard({
