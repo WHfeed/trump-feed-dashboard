@@ -48,15 +48,15 @@ export default function App() {
         .catch(() => setLoading(false));
     };
 
+    fetchFeed();
+    const interval = setInterval(fetchFeed, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const openHandler = () => setShowPrivacy(true);
     window.addEventListener("open-privacy-modal", openHandler);
     return () => window.removeEventListener("open-privacy-modal", openHandler);
-  }, []);
-
-    fetchFeed();
-    const interval = setInterval(fetchFeed, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   const allSources = Array.from(new Set(posts.map((p) => p.source)));
