@@ -12,7 +12,7 @@ export default function RecapBox({ summary, lastUpdated, className = "" }) {
       </p>
 
       <div className="text-xs text-gray-400 pt-2 border-t border-[#1B1F19]">
-        Updated hourly · Last updated: {lastUpdated}
+        Updated every 5 minutes · Last updated: {lastUpdated}
       </div>
     </div>
   );

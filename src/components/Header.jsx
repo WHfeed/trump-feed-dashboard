@@ -39,7 +39,7 @@ export default function Header({ totalPosts, overallImpact, sources }) {
       </div>
 
       {/* Small screen StatsBox */}
-      <div className="hidden max-[1056px]:flex items-start ml-2 w-full">
+      <div className="hidden max-[1056px]:flex items-start ml-2 w-full max-[599px]:mt-[6px]">
         <div className="w-full max-w-[240px] flex-shrink-0">
           <div className="scale-100 max-[600px]:scale-[0.9] max-[540px]:scale-[0.85] max-[480px]:scale-[0.8] max-[460px]:scale-[0.75] max-[420px]:scale-[0.70] max-[410px]:scale-[0.65] max-[380px]:scale-[0.60] origin-top">
             <StatsBox totalPosts={totalPosts} overallImpact={overallImpact} sources={sources} />

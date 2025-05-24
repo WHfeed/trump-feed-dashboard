@@ -159,16 +159,24 @@ export default function App() {
         </p>
       ) : (
         <div className={`mx-auto px-6 ${windowWidth > 1410 ? "flex items-start justify-center" : ""}`}>
-          <div className={`${windowWidth > 1410 ? "w-[700px] space-y-8 -translate-x-20" : "space-y-8 max-w-3xl mx-auto"}`}>
+          <div
+            className={`${
+              windowWidth > 1410
+                ? "w-[700px] space-y-8 -translate-x-20"
+                : "space-y-8 max-w-3xl mx-auto"
+            }`}
+          >
             {filteredPosts.length === 0 ? (
               <p className="text-center text-gray-400">No posts match your filters. Try adjusting them.</p>
             ) : (
               <>
                 {[...filteredPosts].reverse().slice(0, visibleCount).map((post, index) => (
-                  <React.Fragment key={post.link}>
-                    <PostCard {...post} currentTime={currentTime} />
-                    {renderRecapBox(index)}
-                  </React.Fragment>
+                  <div key={post.link} className="w-full">
+                    <div className="max-[599px]:-mx-10 max-[599px]:px-1">
+                      <PostCard {...post} currentTime={currentTime} />
+                      {renderRecapBox(index)}
+                    </div>
+                  </div>
                 ))}
 
                 {visibleCount < filteredPosts.length && (
