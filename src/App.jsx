@@ -5,6 +5,7 @@ import StatsBox from "./components/StatsBox";
 import RecapBox from "./components/RecapBox";
 import FilterBar from "./components/FilterBar";
 import Header from "./components/Header";
+import CookieBanner from "./components/CookieBanner";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
@@ -204,6 +205,7 @@ export default function App() {
       <footer className="mt-16 text-center text-xs text-[#6FCF97]">
         🦅 Powered by <span className="font-semibold animate-breathe">EagleEye AI</span>
       </footer>
+      <CookieBanner />
     </main>
     </>
   );
