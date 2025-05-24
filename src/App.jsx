@@ -6,6 +6,7 @@ import RecapBox from "./components/RecapBox";
 import FilterBar from "./components/FilterBar";
 import Header from "./components/Header";
 import CookieBanner from "./components/CookieBanner";
+import PrivacyModal from "./components/PrivacyModal";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
@@ -19,6 +20,7 @@ export default function App() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [visibleCount, setVisibleCount] = useState(12); // 👈 Show first 12 posts
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -45,6 +47,12 @@ export default function App() {
         })
         .catch(() => setLoading(false));
     };
+
+  useEffect(() => {
+    const openHandler = () => setShowPrivacy(true);
+    window.addEventListener("open-privacy-modal", openHandler);
+    return () => window.removeEventListener("open-privacy-modal", openHandler);
+  }, []);
 
     fetchFeed();
     const interval = setInterval(fetchFeed, 30000);
@@ -206,6 +214,7 @@ export default function App() {
         🦅 Powered by <span className="font-semibold animate-breathe">EagleEye AI</span>
       </footer>
       <CookieBanner />
+      <PrivacyModal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} />
     </main>
     </>
   );
