@@ -23,7 +23,12 @@ export default function CookieBanner() {
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
         <p className="text-center sm:text-left">
           This site uses cookies for analytics. By continuing to browse, you agree to our{" "}
-          <a href="/privacy" className="underline text-orange-400 hover:text-orange-300">privacy policy</a>.
+          <span
+            onClick={() => window.dispatchEvent(new Event("open-privacy-modal"))}
+            className="underline text-orange-400 cursor-pointer"
+        >
+            privacy policy
+        </span>
         </p>
         <button
           onClick={handleAccept}
