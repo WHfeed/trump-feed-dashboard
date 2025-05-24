@@ -12,7 +12,7 @@ export default function PrivacyModal({ isOpen, onClose }) {
       {/* Centered modal box */}
       <div className={`absolute top-1/2 left-1/2 w-full max-w-2xl transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out
         ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}>
-        <div className="bg-[#0F171F] bg-opacity-95 border border-orange-400 p-8 text-[#E3DCCF] shadow-lg rounded-xl max-h-[90vh] overflow-y-auto">
+        <div className="bg-[#0F171F] bg-opacity-95 border border-orange-400/40 p-8 text-[#E3DCCF] shadow-lg rounded-xl max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold tracking-wide">Privacy Policy</h2>
             <button onClick={onClose} className="text-orange-400 font-semibold hover:underline text-sm">
