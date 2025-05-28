@@ -59,6 +59,12 @@ export default function App() {
     return () => window.removeEventListener("open-privacy-modal", openHandler);
   }, []);
 
+  useEffect(() => {
+    if (window.location.pathname.startsWith("/post")) {
+      window.location.replace("/");
+    }
+  }, []);
+
   const allSources = Array.from(new Set(posts.map((p) => p.source)));
   const allIndividuals = Array.from(
     new Set(posts.map((p) => (p.source.includes("X - ") ? p.source : null)).filter(Boolean))
