@@ -55,6 +55,23 @@ export default function PostCard({
 
   const relativeTime = getRelativeTime(display_time || timestamp, currentTime);
 
+  const handleShare = () => {
+  const postUrl = `https://whitehousefeed.com/post?link=${encodeURIComponent(link)}`;
+    if (navigator.share) {
+      navigator
+        .share({
+          title,
+          text: summary,
+          url: postUrl,
+        })
+        .catch((err) => console.error("Share failed:", err));
+    } else {
+      navigator.clipboard.writeText(postUrl).then(() => {
+        alert("Link copied to clipboard!");
+      });
+    }
+  };
+
   return (
     <div className="max-w-3xl max-[640px]:max-w-full mx-auto bg-[#2F403C] rounded-xl shadow p-6 max-[640px]:p-2 mb-8 max-[640px]:w-full max-[640px]:px-4 transition-all duration-300">
       {/* Post Content */}
@@ -131,8 +148,8 @@ export default function PostCard({
           </div>
         )}
 
-        {/* Link to Original Post */}
-        <div className="pt-2">
+        {/* Link and Share Row */}
+        <div className="flex justify-between items-center pt-2">
           <a
             href={link}
             target="_blank"
@@ -141,6 +158,26 @@ export default function PostCard({
           >
             View Original Post →
           </a>
+          <button
+            onClick={handleShare}
+            className="p-2 bg-[#3A4A47] text-[#E3DCCF] rounded-full hover:bg-[#4E5D5A] transition"
+            title="Share this post"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 16v4a2 2 0 002 2h12a2 2 0 002-2v-4m-4-4l-4-4m0 0l-4 4m4-4v12"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
