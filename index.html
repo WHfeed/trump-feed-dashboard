@@ -14,6 +14,11 @@
       gtag('js', new Date());
       gtag('config', 'G-1WRD6PLE1J');
     </script>
+    <script>
+      if (window.location.pathname.startsWith("/post")) {
+        window.location.href = "/";
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
