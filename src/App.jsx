@@ -61,7 +61,7 @@ export default function App() {
 
   useEffect(() => {
     if (window.location.pathname.startsWith("/post")) {
-      window.location.replace("/");
+      window.location.href = "/";
     }
   }, []);
 
